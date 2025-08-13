@@ -4,7 +4,7 @@ const vapi = new VapiClient({
   token: '98aa2e5a-a3af-4abf-b881-96a3119bb394' // Get your private api key from the dashboard
 });
 
-const aldenPhoneNumber = "18777963351"
+const aldenPhoneNumber = "+18777963351"
 
 async function createCall(customerPhoneNumber: string) {
   const call = await vapi.calls.create({
@@ -51,13 +51,7 @@ export async function POST(request: NextRequest) {
 
     const {phoneNumber: customerPhoneNumber} = body
 
-    return await createCall(customerPhoneNumber)
-    
-    return NextResponse.json({
-      message: 'This is an example POST endpoint',
-      received: body,
-      timestamp: new Date().toISOString()
-    }, { status: 201 })
+    return await createCall("+" + customerPhoneNumber)
   } catch (error) {
     return NextResponse.json(
       { error: 'Invalid request body' },
