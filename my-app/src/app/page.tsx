@@ -6,12 +6,13 @@ import { ExampleApiUsage } from "@/components/example-api-usage"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import { errorBorderColor, errorTextColor } from "@/components/ui/colors"
+import { Call } from "@/types"
+import { jsonClone } from "@/lib/utils"
 
 export default function Home() {
   const [formData, setFormData] = useState({ firstName: '', lastName: '', phoneNumber: '' });
   const [formErrors, setFormErrors] = useState({ firstName: '', lastName: '', phoneNumber: '' });
-  const [callResult, setCallResult] = useState<any>(null)
-  const [updatedStatus, setUpdatedStatus] = useState<any>(null)
+  const [callResults, setCallResults] = useState<Call[]>([])
 
 
   const validateFormData = () => {
@@ -52,39 +53,41 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      if (response.ok) { 
-        const result = await response.json()
-        setCallResult(result)
-      } else {
-        const error = await response.json();
-        alert(`${error.error}`);
-      }
+      const result = await response.json()
+      const {id: callId, status, createdAt} = result.message
+      
+      let formattedCreatedAt = new Date(createdAt);
+      formattedCreatedAt.setMilliseconds(0);
+      let dateISOString = formattedCreatedAt.toISOString().replace(".000Z", "Z");
+
+      const newEntry = {...formData, callId, status, createdAt: dateISOString} as Call
+      const copiedCallResult = jsonClone(callResults)
+      copiedCallResult.push(newEntry)
+      setCallResults(copiedCallResult)
     } catch (error) {
       alert(error);
     }
   }
 
-  const checkStatus = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!callResult) {
+  const checkStatus = async (index: number) => {
+    if (!callResults) {
       // Would be helpful if this had a toast
+      return
+    }
+    if (index >= callResults.length) {
       return
     }
 
     try {
-      const response = await fetch(`/api/vapi?id=${callResult.message.id}`, {
+      const response = await fetch(`/api/vapi?id=${callResults[index].callId}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
 
-      if (response.ok) { 
-        const result = await response.json()
-        setUpdatedStatus(result)
-      } else {
-        const error = await response.json();
-        alert(`${error.error}`);
-      }
+      const result = await response.json()
+      const copiedCallResult = jsonClone(callResults)
+      copiedCallResult[index] = {...copiedCallResult[index], status: result?.message?.status}
+      setCallResults(copiedCallResult)
     } catch (error) {
       alert(error);
     }
@@ -97,7 +100,7 @@ export default function Home() {
 
         <div className="grid gap-6">
           <Card>
-          <form onSubmit={startCall}>
+          <form className="mx-5" onSubmit={startCall}>
               <div>
                 <label>First Name</label>
                 <Input
@@ -118,7 +121,7 @@ export default function Home() {
                 />
                 {formErrors.lastName && <p className={errorTextColor}> {formErrors.lastName}</p>}
               </div>
-              <div>
+              <div className="my-5">
                 <label>Phone Number</label>
                 <Input
                   value={formData.phoneNumber}
@@ -143,32 +146,38 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-            {callResult && (
-            <pre className="bg-muted p-4 rounded-md overflow-auto">
-              {JSON.stringify(callResult, null, 2)}
-            </pre>
-          )}
+            <table style={{
+              margin: `12px 0`,
+              width: '100%',
+            }}>
+              <thead>
+                <tr>
+                {["First", "Last", "Phone", "Status", "Called At"].map((header, i) => 
+                  <th key={i}>
+                    <p>
+                      {header}
+                    </p>
+                  </th>)}
+                </tr>
+              </thead>
+              <tbody>
+              {callResults?.map((result, i) => (
+                <tr key={i} 
+                onClick={(e: React.SyntheticEvent) => {
+                  e.preventDefault()
+                  checkStatus(i)
+                }}
+                style={{cursor:"pointer"}}>
+                  <td><p>{result.firstName}</p></td>
+                  <td><p>{result.lastName}</p></td>
+                  <td><p>{result.status}</p></td>
+                  <td><p>{result.createdAt}</p></td>
+                </tr>
+              ))}
+              </tbody>
+            </table>
             </CardContent>
           </Card>
-
-          <Card>
-            <CardContent>
-            {updatedStatus && (
-            <pre className="bg-muted p-4 rounded-md overflow-auto">
-              {JSON.stringify(updatedStatus, null, 2)}
-            </pre>
-          )}
-              <Button 
-                disabled={!callResult}
-                type="submit" 
-                onClick={checkStatus}
-              >
-                Update Status
-              </Button>
-            </CardContent>
-          </Card>
-
-          <ExampleApiUsage />
         </div>
       </div>
     </main>
