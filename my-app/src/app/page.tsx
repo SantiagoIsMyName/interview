@@ -17,11 +17,14 @@ export default function Home() {
     const {firstName, lastName, phoneNumber} = formData
     const newFormErrors = { firstName: '', lastName: '', phoneNumber: '' };
     const PHONE_NUMBER_LENGTH = 12
-    if (phoneNumber.length != PHONE_NUMBER_LENGTH) {
-      newFormErrors.phoneNumber = "Phone number not correct length; remove any dashes"
+    if (!phoneNumber) {
+      newFormErrors.phoneNumber = "Missing phone number"
     }
     else if (phoneNumber[0] !== "+") {
       newFormErrors.phoneNumber = "Phone number requires + at start"
+    }
+    else if (phoneNumber.length != PHONE_NUMBER_LENGTH) {
+      newFormErrors.phoneNumber = "Phone number not correct length; remove any dashes"
     }
 
     if (!firstName) {
