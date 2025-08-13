@@ -36,6 +36,21 @@ export default function Home() {
       // Would add an error toast
       return
     }
+
+    try {
+      const response = await fetch('/api/start-call', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        alert(`${error.error}`);
+      }
+    } catch (error) {
+      alert(error);
+    }
   }
 
   return (
