@@ -170,6 +170,7 @@ export default function Home() {
                 style={{cursor:"pointer"}}>
                   <td><p>{result.firstName}</p></td>
                   <td><p>{result.lastName}</p></td>
+                  <td><p>{result.phoneNumber}</p></td>
                   <td><p>{result.status}</p></td>
                   <td><p>{result.createdAt}</p></td>
                 </tr>
