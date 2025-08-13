@@ -44,8 +44,8 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      const result = await response.json()
       if (response.ok) { 
+        const result = await response.json()
         setCallResult(result)
       } else {
         const error = await response.json();

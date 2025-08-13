@@ -50,7 +50,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
 
     const {phoneNumber: customerPhoneNumber} = body
-    // return createCall(customerPhoneNumber)
+
+    return await createCall(customerPhoneNumber)
+    
     return NextResponse.json({
       message: 'This is an example POST endpoint',
       received: body,
