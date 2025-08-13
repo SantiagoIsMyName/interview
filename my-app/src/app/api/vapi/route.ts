@@ -2,7 +2,7 @@ import { VapiClient } from '@vapi-ai/server-sdk';
 import { NextRequest, NextResponse } from 'next/server'
 
 const vapi = new VapiClient({
-  token: // Get your private api key from the dashboard
+  token: "" // Get your private api key from the dashboard
 });
 
 const aldenPhoneNumber = "c81fef05-58be-4f3f-a794-63534c8c1124"
