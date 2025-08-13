@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
     const {phoneNumber: customerPhoneNumber} = body
 
-    return await createCall("+" + customerPhoneNumber)
+    return await createCall(customerPhoneNumber)
   } catch (error) {
     return NextResponse.json(
       { error: 'Invalid request body' },

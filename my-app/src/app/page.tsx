@@ -16,10 +16,14 @@ export default function Home() {
   const validateFormData = () => {
     const {firstName, lastName, phoneNumber} = formData
     const newFormErrors = { firstName: '', lastName: '', phoneNumber: '' };
-    const PHONE_NUMBER_LENGTH = 11
+    const PHONE_NUMBER_LENGTH = 12
     if (phoneNumber.length != PHONE_NUMBER_LENGTH) {
       newFormErrors.phoneNumber = "Phone number not correct length; remove any dashes"
     }
+    else if (phoneNumber[0] !== "+") {
+      newFormErrors.phoneNumber = "Phone number requires + at start"
+    }
+
     if (!firstName) {
       newFormErrors.firstName = "Missing first name"
     }
