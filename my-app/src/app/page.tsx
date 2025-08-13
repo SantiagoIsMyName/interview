@@ -96,18 +96,6 @@ export default function Home() {
                 {'Start Call'}
               </Button>
             </form>
-            <CardHeader>
-              <CardTitle>Start New Call</CardTitle>
-              <CardDescription>
-                Initiate an automated phone screen with a candidate
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-4">
-                TODO: Implement call initiation form with phone number input
-              </p>
-              <Button>Start Call</Button>
-            </CardContent>
           </Card>
 
           <Card>
