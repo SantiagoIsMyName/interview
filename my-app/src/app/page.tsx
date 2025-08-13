@@ -11,6 +11,7 @@ export default function Home() {
   const [formData, setFormData] = useState({ firstName: '', lastName: '', phoneNumber: '' });
   const [formErrors, setFormErrors] = useState({ firstName: '', lastName: '', phoneNumber: '' });
   const [callResult, setCallResult] = useState<any>(null)
+  const [updatedStatus, setUpdatedStatus] = useState<any>(null)
 
 
   const validateFormData = () => {
@@ -66,15 +67,20 @@ export default function Home() {
   const checkStatus = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!callResult) {
+      // Would be helpful if this had a toast
+      return
+    }
+
     try {
-      const response = await fetch(`/api/vapi?id=${callResult.id}`, {
+      const response = await fetch(`/api/vapi?id=${callResult.message.id}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(callResult),
       });
+
       if (response.ok) { 
         const result = await response.json()
-        setCallResult(result)
+        setUpdatedStatus(result)
       } else {
         const error = await response.json();
         alert(`${error.error}`);
@@ -140,6 +146,16 @@ export default function Home() {
             {callResult && (
             <pre className="bg-muted p-4 rounded-md overflow-auto">
               {JSON.stringify(callResult, null, 2)}
+            </pre>
+          )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent>
+            {updatedStatus && (
+            <pre className="bg-muted p-4 rounded-md overflow-auto">
+              {JSON.stringify(updatedStatus, null, 2)}
             </pre>
           )}
               <Button 
