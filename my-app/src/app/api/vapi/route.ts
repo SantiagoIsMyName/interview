@@ -1,4 +1,5 @@
 import { VapiClient } from '@vapi-ai/server-sdk';
+import { NextRequest, NextResponse } from 'next/server'
 
 const vapi = new VapiClient({
   token: '98aa2e5a-a3af-4abf-b881-96a3119bb394' // Get your private api key from the dashboard
@@ -26,22 +27,27 @@ async function createCall(customerPhoneNumber: string) {
   return call;
 }
 
-
-import { NextRequest, NextResponse } from 'next/server'
-
-// Example API endpoint showing how to handle different HTTP methods
-// This is just a demonstration - candidates should create their own endpoints
+async function getCall(id: string) {
+  const call = await vapi.calls.get(id);
+  return call;
+}
 
 export async function GET(request: NextRequest) {
   // Example: Get query parameters
   const searchParams = request.nextUrl.searchParams
   const id = searchParams.get('id')
 
+  if (!id) {
+    return NextResponse.json(
+      { error: "Missing ID" },
+      { status: 400 }
+    )
+  }
+  const callResponse = await getCall(id)
   return NextResponse.json({
-    message: 'This is an example GET endpoint',
-    id: id || 'no id provided',
+    message: callResponse,
     timestamp: new Date().toISOString()
-  })
+  }, { status: 201 })
 }
 
 export async function POST(request: NextRequest) {

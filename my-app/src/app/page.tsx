@@ -63,6 +63,27 @@ export default function Home() {
     }
   }
 
+  const checkStatus = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(`/api/vapi?id=${callResult.id}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(callResult),
+      });
+      if (response.ok) { 
+        const result = await response.json()
+        setCallResult(result)
+      } else {
+        const error = await response.json();
+        alert(`${error.error}`);
+      }
+    } catch (error) {
+      alert(error);
+    }
+  }
+
   return (
     <main className="container mx-auto p-4">
       <div className="max-w-4xl mx-auto">
@@ -103,7 +124,7 @@ export default function Home() {
               <Button 
                 type="submit" 
               >
-                {'Start Call'}
+                Start Call
               </Button>
             </form>
           </Card>
@@ -121,6 +142,13 @@ export default function Home() {
               {JSON.stringify(callResult, null, 2)}
             </pre>
           )}
+              <Button 
+                disabled={!callResult}
+                type="submit" 
+                onClick={checkStatus}
+              >
+                Update Status
+              </Button>
             </CardContent>
           </Card>
 
