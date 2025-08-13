@@ -4,7 +4,7 @@ const vapi = new VapiClient({
   token: '98aa2e5a-a3af-4abf-b881-96a3119bb394' // Get your private api key from the dashboard
 });
 
-async function createCall(customerPhoneNumber) {
+async function createCall(customerPhoneNumber: string) {
   const call = await vapi.calls.create({
     phoneNumberId: 'YOUR_PHONE_NUMBER_ID', // Create a free phone number in the dashboard
     customer: { number: customerPhoneNumber}, // Your customer's phone number
