@@ -10,6 +10,7 @@ import { errorBorderColor, errorTextColor } from "@/components/ui/colors"
 export default function Home() {
   const [formData, setFormData] = useState({ firstName: '', lastName: '', phoneNumber: '' });
   const [formErrors, setFormErrors] = useState({ firstName: '', lastName: '', phoneNumber: '' });
+  const [callResult, setCallResult] = useState<any>(null)
 
 
   const validateFormData = () => {
@@ -43,8 +44,10 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-
-      if (!response.ok) {
+      const result = await response.json()
+      if (response.ok) { 
+        setCallResult(result)
+      } else {
         const error = await response.json();
         alert(`${error.error}`);
       }
@@ -106,9 +109,11 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">
-                TODO: Implement call logs table
-              </p>
+            {callResult && (
+            <pre className="bg-muted p-4 rounded-md overflow-auto">
+              {JSON.stringify(callResult, null, 2)}
+            </pre>
+          )}
             </CardContent>
           </Card>
 
