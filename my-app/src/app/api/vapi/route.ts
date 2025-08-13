@@ -5,7 +5,7 @@ const vapi = new VapiClient({
   token: '#' // Get your private api key from the dashboard
 });
 
-const aldenPhoneNumber = "c81fef05-58be-4f3f-a794-63534c8c1124"
+const aldenPhoneNumber = "##"
 
 async function createCall(customerPhoneNumber: string) {
   const call = await vapi.calls.create({
