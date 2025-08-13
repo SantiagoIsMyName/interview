@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ExampleApiUsage } from "@/components/example-api-usage"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
+import { errorBorderColor, errorTextColor } from "@/components/ui/colors"
 
 export default function Home() {
   const [formData, setFormData] = useState({ firstName: '', lastName: '', phoneNumber: '' });
@@ -51,9 +52,9 @@ export default function Home() {
                   value={formData.firstName}
                   onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                   placeholder=""
-                  className={formErrors.firstName ? 'border-red-500' : ''}
+                  className={formErrors.firstName ? errorBorderColor : ''}
                 />
-                {formErrors.firstName && <p className="text-red-500">{formErrors.firstName}</p>}
+                {formErrors.firstName && <p className={errorTextColor}> {formErrors.firstName}</p>}
               </div>
               <div>
                 <label>Last Name</label>
@@ -61,18 +62,18 @@ export default function Home() {
                   value={formData.lastName}
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                   placeholder=""
-                  className={formErrors.lastName ? 'border-red-500' : ''}
+                  className={formErrors.lastName ? errorBorderColor : ''}
                 />
-                {formErrors.lastName && <p className="text-red-500">{formErrors.lastName}</p>}
+                {formErrors.lastName && <p className={errorTextColor}> {formErrors.lastName}</p>}
               </div>
               <div>
                 <label>Phone Number</label>
                 <Input
                   value={formData.phoneNumber}
                   onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                  className={formErrors.phoneNumber ? 'border-red-500' : ''}
+                  className={formErrors.phoneNumber ? errorBorderColor : ''}
                 />
-                  {formErrors.phoneNumber && <p className="text-red-500">{formErrors.phoneNumber}</p>}
+                  {formErrors.phoneNumber && <p className={errorTextColor}> {formErrors.phoneNumber}</p>}
               </div>
               <Button 
                 type="submit" 
